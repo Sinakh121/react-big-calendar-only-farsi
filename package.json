@@ -1,5 +1,5 @@
 {
-  "name": "@sinakhx/react-big-calendar",
+  "name": "react-big-calendar-only-farsi",
   "version": "1.0.0",
   "description": "Persian Calendar! with events",
   "author": {
@@ -49,7 +49,6 @@
     "test": "npm run lint && jest",
     "tdd": "jest --watch",
     "release": "rollout",
-    "prepublishOnly": "npm run build",
     "prettier": "prettier '**/*js' !examples/bundle.js '!lib/**' --write ",
     "precommit": "lint-staged"
   },
