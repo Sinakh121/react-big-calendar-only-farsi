@@ -1,0 +1,17 @@
+parser: babel-eslint
+extends:
+  - jason/react
+  - prettier
+env:
+  es6: true
+rules:
+  global-require: off
+  no-console: ['error', {
+    allow: ['warn', 'error', 'info']
+  }]
+  no-unused-vars: ['error', {
+    vars: all,
+    args: after-used,
+    varsIgnorePattern: ^_,
+    argsIgnorePattern: ^_,
+  }]
