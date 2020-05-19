@@ -1,7 +1,6 @@
 /* eslint no-fallthrough: off */
 import * as dates from 'date-arithmetic-only-farsi'
 import moment from 'jalali-moment'
-import momentGregorian from 'moment'
 
 export {
   milliseconds,
@@ -31,7 +30,7 @@ const MILLI = {
 
 const MONTHS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
-function monthJalali(date, args) {
+export function month(date, args) {
   const m = moment(date)
   return m.month(args)
 }
@@ -47,69 +46,27 @@ export function firstVisibleDay(date, localizer) {
   return dates.startOf(firstOfMonth, 'week', localizer.startOfWeek())
 }
 
-function lastVisibleDay(date, localizer) {
-  let endOfMonth = dates.endOf(date, 'month')
-  return dates.endOf(endOfMonth, 'week', localizer.startOfWeek())
-}
-
-function lastVisibleDayJalali(date, localizer) {
-  let a = firstVisibleDay(date, localizer)
-  a = moment(a).add(1, 'jMonth').toJSON().toString().slice(0, 10) //real last day of month
+export function lastVisibleDay(date, localizer) {
   let endOfMonth = dates.endOf(date, 'month')
   let lastVisibleDay = dates.endOf(endOfMonth, 'week', localizer.startOfWeek())
   return lastVisibleDay
 }
 
 function removeDuplicates(dayslist) {
-  const list = dayslist.map(date => date.toJSON().toString().slice(0, 10))
-  return Array.from(new Set(list)).map(date => moment(new Date(date)).startOf('day').toDate())
+  const list = dayslist.map(date =>
+    date
+      .toJSON()
+      .toString()
+      .slice(0, 10)
+  )
+  return Array.from(new Set(list)).map(date =>
+    moment(new Date(date))
+      .startOf('day')
+      .toDate()
+  )
 }
 
-function visibleDays(date, localizer) {
-  let current = firstVisibleDay(date, localizer),
-    last = lastVisibleDay(date, localizer),
-    days = []
-
-  while (dates.lte(current, last, 'day')) {
-    days.push(current)
-    current = dates.add(current, 1, 'day')
-  }
-
-  function dayNumber(date){
-    return parseInt(date.toJSON().toString().slice(8, 10), 10)
-  }
-
-  function addDays(diff) {
-    const lastday = uniqueDaysList[uniqueDaysList.length - 1];
-    for (let i = 1; i < diff + 1; i++) {
-      uniqueDaysList.push(momentGregorian(lastday).add(i, 'days').toDate())
-    }
-  }
-  
-  let uniqueDaysList = removeDuplicates(days)
-  
-  // //remove extra day
-  if (uniqueDaysList.length === 36 || uniqueDaysList.length === 43) uniqueDaysList.pop()
-  
-  const realLastDayOfMonth = dayNumber(momentGregorian(uniqueDaysList[15]).endOf('month'))
-  const lastViewingDay = dayNumber(momentGregorian(uniqueDaysList[uniqueDaysList.length - 1]).add(1, 'day').toDate())
-
-  //add last row if neccessary
-  const difference = Math.abs(realLastDayOfMonth - lastViewingDay)
-  if (difference > 0 && difference < 5 && lastViewingDay > 20) addDays(7)
-
-  debugger;
-  console.log('what?');
-  
-  //remove first extra row
-  if (dayNumber(uniqueDaysList[8]) === 1){
-    uniqueDaysList.splice(0,7)
-  }
-
-  return uniqueDaysList
-}
-
-function visibleDaysJalali(date, localizer) {
+export function visibleDays(date, localizer) {
   let current = firstVisibleDay(date, localizer),
     last = lastVisibleDay(date, localizer),
     days = []
@@ -121,8 +78,17 @@ function visibleDaysJalali(date, localizer) {
 
   // removing duplicate dates
   function removeDuplicates(dayslist) {
-    const list = dayslist.map(date => date.toJSON().toString().slice(0, 10))
-    return Array.from(new Set(list)).map(date => moment(new Date(date)).startOf('day').toDate())
+    const list = dayslist.map(date =>
+      date
+        .toJSON()
+        .toString()
+        .slice(0, 10)
+    )
+    return Array.from(new Set(list)).map(date =>
+      moment(new Date(date))
+        .startOf('day')
+        .toDate()
+    )
   }
   let uniqueDaysList = removeDuplicates(days)
 
@@ -134,7 +100,11 @@ function visibleDaysJalali(date, localizer) {
 
   function addDays(diff) {
     for (let i = 1; i < diff + 1; i++) {
-      uniqueDaysList.push(moment(lastday).add(i, 'days').toDate())
+      uniqueDaysList.push(
+        moment(lastday)
+          .add(i, 'days')
+          .toDate()
+      )
     }
   }
 
@@ -308,7 +278,3 @@ export function yesterday() {
 export function tomorrow() {
   return dates.add(dates.startOf(new Date(), 'day'), 1, 'day')
 }
-
-export { lastVisibleDayJalali as lastVisibleDay }
-export { visibleDaysJalali as visibleDays }
-export { monthJalali as month }
