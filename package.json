@@ -107,7 +107,7 @@
     "moment": "^2.22.2",
     "mt-changelog": "^0.6.1",
     "node-sass": "^4.14.0",
-    "postcss": "^7.0.16",
+    "postcss": "^8.2.10",
     "postcss-cli": "^6.1.2",
     "prettier": "^1.15.1",
     "react": "^16.6.1",
